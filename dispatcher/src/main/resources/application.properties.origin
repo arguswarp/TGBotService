@@ -1,0 +1,5 @@
+server.port=
+
+#telegrambot properties
+telegrambot.token=
+telegrambot.name=
