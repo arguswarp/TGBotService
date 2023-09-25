@@ -4,3 +4,4 @@
 /dispatcher/src/main/resources/log4j.properties
 /.idea/
 /logs/
+/common-rabbitmq/target/

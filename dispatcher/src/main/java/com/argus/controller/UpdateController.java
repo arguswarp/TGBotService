@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import static com.argus.RabitQueue.*;
+
 @Component
 @Log4j
 public class UpdateController {
-    private static final String TEXT_MESSAGE_UPDATE = "Update text";
-    private static final String PHOTO_MESSAGE_UPDATE = "Update photo";
-    private static final String DOCUMENT_MESSAGE_UPDATE = "Update document";
     private TelegramBot telegramBot;
     private final MessageUtils messageUtils;
 
@@ -72,7 +71,7 @@ public class UpdateController {
     }
 
     private void processDocMessage(Update update) {
-        updateProducer.produce(DOCUMENT_MESSAGE_UPDATE, update);
+        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
         setFileIsReceivedView(update);
     }
 
