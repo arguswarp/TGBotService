@@ -5,3 +5,8 @@
 /.idea/
 /logs/
 /common-rabbitmq/target/
+/node/src/main/resources/application.properties
+/node/src/main/resources/log4j.properties
+/node/target/classes/application.properties
+/node/target/classes/log4j.properties
+/node/target/

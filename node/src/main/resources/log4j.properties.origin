@@ -1,0 +1,16 @@
+# Root logger option
+log4j.rootLogger=
+
+# Redirect log messages to console
+log4j.appender.stdout=
+log4j.appender.stdout.Target=
+log4j.appender.stdout.layout=
+log4j.appender.stdout.layout.ConversionPattern=
+
+# Redirect log messages to a log file
+log4j.appender.file=
+log4j.appender.file.File=
+log4j.appender.file.MaxFileSize=
+log4j.appender.file.MaxBackupIndex=
+log4j.appender.file.layout=
+log4j.appender.file.layout.ConversionPattern=

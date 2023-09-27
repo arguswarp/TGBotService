@@ -1,0 +1,12 @@
+#server properties
+server.port=
+
+#telegrambot properties
+telegrambot.token=
+telegrambot.name=
+
+#rabbitmq properties
+spring.rabbitmq.host=
+spring.rabbitmq.port=
+spring.rabbitmq.username=
+spring.rabbitmq.password=
