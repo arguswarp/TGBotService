@@ -1,6 +1,6 @@
 package com.argus.service.impl;
 
-import com.argus.service.ProducerService;
+import com.argus.service.MainService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,10 @@ import static com.argus.RabitQueue.*;
 @Service
 @Log4j
 public class ConsumerServiceImpl implements com.argus.service.ConsumerService {
-    private final ProducerService producerService;
+    private final MainService mainService;
 
-    public ConsumerServiceImpl(ProducerService producerService) {
-        this.producerService = producerService;
+    public ConsumerServiceImpl(MainService mainService) {
+        this.mainService = mainService;
     }
 
     @Override
@@ -23,11 +23,7 @@ public class ConsumerServiceImpl implements com.argus.service.ConsumerService {
     public void consumeTextMessage(Update update) {
         log.debug("NODE: Text message is received");
 
-        var message = update.getMessage();
-        var sendMessage = new SendMessage();
-        sendMessage.setChatId(message.getChatId().toString());
-        sendMessage.setText("Hello from NODE");
-        producerService.produceAnswer(sendMessage);
+        mainService.processTextMessage(update);
     }
 
     @Override
