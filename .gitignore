@@ -10,3 +10,4 @@
 /node/target/classes/application.properties
 /node/target/classes/log4j.properties
 /node/target/
+/node/logs/node.log

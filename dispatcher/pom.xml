@@ -39,6 +39,11 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-amqp</artifactId>
     </dependency>
+    <dependency>
+        <groupId>au.com.dius</groupId>
+        <artifactId>pact-jvm-provider-junit5-spring</artifactId>
+        <version>4.0.10</version>
+    </dependency>
 </dependencies>
 
 </project>
