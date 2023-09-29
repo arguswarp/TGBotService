@@ -28,6 +28,6 @@ public class AppUser {
     private String userName;
     private String email;
     private Boolean isActive;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private UserState userState;
 }
