@@ -3,6 +3,7 @@ package com.argus.service.impl;
 import com.argus.dao.AppUserDAO;
 import com.argus.dao.RawDataDAO;
 import com.argus.entity.AppDocument;
+import com.argus.entity.AppPhoto;
 import com.argus.entity.AppUser;
 import com.argus.entity.RawData;
 import com.argus.service.FileService;
@@ -59,8 +60,6 @@ public class MainServiceImpl implements MainService {
 
         var chatId = update.getMessage().getChatId();
         sendAnswer(output, chatId);
-
-
     }
 
     @Override
@@ -104,9 +103,16 @@ public class MainServiceImpl implements MainService {
         if (isNotAllowToSendContent(chatId, appUser)) {
             return;
         }
-        //TODO implement save photo
-        var answer = "Photo is successfully uploaded! Link to download: http://test.ru/get-photo/777";
-        sendAnswer(answer, chatId);
+        try {
+            AppPhoto photo = fileService.processPhoto(update.getMessage());
+            //TODO implement save photo
+            var answer = "Photo is successfully uploaded! Link to download: http://test.ru/get-photo/777";
+            sendAnswer(answer, chatId);
+        } catch (UploadFileException e) {
+            log.error(e);
+            String error = "Unfortunately can't download. Try again later.";
+            sendAnswer(error, chatId);
+        }
     }
 
     private void sendAnswer(String output, Long chatId) {
@@ -121,7 +127,7 @@ public class MainServiceImpl implements MainService {
         if (serviceCommand.isPresent()) {
             switch (serviceCommand.get()) {
                 case REGISTRATION -> {
-                    //TODO add registration
+                    //TODO add registration (appUser here)
                     return "Temporally unavailable";
                 }
                 case HELP -> {
