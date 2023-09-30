@@ -12,3 +12,6 @@
 /node/target/
 /node/logs/node.log
 /common-jpa/target/
+/rest-service/src/main/resources/application.properties
+/rest-service/target/classes/application.properties
+/rest-service/target/

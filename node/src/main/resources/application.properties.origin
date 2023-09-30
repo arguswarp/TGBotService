@@ -12,3 +12,8 @@ spring.datasource.url=
 spring.datasource.username=
 spring.datasource.password=
 spring.jpa.generate-ddl=
+
+#telegrambot properties
+token=
+service.file_info.uri=
+service.file_storage.uri=

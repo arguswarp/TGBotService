@@ -1,0 +1,8 @@
+#server properties
+server.port=
+
+#postgres properties
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.jpa.generate-ddl=
