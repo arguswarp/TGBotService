@@ -6,3 +6,6 @@ spring.datasource.url=
 spring.datasource.username=
 spring.datasource.password=
 spring.jpa.generate-ddl=
+
+#rest_service properties
+salt=

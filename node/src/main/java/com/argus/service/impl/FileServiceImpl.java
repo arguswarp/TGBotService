@@ -7,7 +7,9 @@ import com.argus.entity.AppDocument;
 import com.argus.entity.AppPhoto;
 import com.argus.entity.BinaryContent;
 import com.argus.service.FileService;
+import com.argus.service.enums.LinkType;
 import com.argus.service.exceptions.UploadFileException;
+import com.argus.utils.CryptoTool;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,15 +34,19 @@ public class FileServiceImpl implements FileService {
     private String fileInfoUri;
     @Value("${service.file_storage.uri}")
     private String fileStorageUri;
+    @Value("${link.address}")
+    private String linkAddress;
     private final AppDocumentDAO appDocumentDAO;
-
     private final AppPhotoDAO appPhotoDAO;
     private final BinaryContentDAO binaryContentDAO;
 
-    public FileServiceImpl(AppDocumentDAO appDocumentDAO, AppPhotoDAO appPhotoDAO, BinaryContentDAO binaryContentDAO) {
+    private final CryptoTool cryptoTool;
+
+    public FileServiceImpl(AppDocumentDAO appDocumentDAO, AppPhotoDAO appPhotoDAO, BinaryContentDAO binaryContentDAO, CryptoTool cryptoTool) {
         this.appDocumentDAO = appDocumentDAO;
         this.appPhotoDAO = appPhotoDAO;
         this.binaryContentDAO = binaryContentDAO;
+        this.cryptoTool = cryptoTool;
     }
 
     @Override
@@ -74,7 +80,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public AppPhoto processPhoto(Message telegramlMessage) {
         //TODO change to get all photos
-        PhotoSize telegramPhoto = telegramlMessage.getPhoto().get(0);
+        var photoSizeCount = telegramlMessage.getPhoto().size();
+        var photoIndex = photoSizeCount > 1 ? telegramlMessage.getPhoto().size() - 1 : 0;
+        PhotoSize telegramPhoto = telegramlMessage.getPhoto().get(photoIndex);
         String fileId = telegramPhoto.getFileId();
         ResponseEntity<String> response = getFilePathFromAPI(fileId);
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -84,6 +92,12 @@ public class FileServiceImpl implements FileService {
         } else {
             throw new UploadFileException("Bad response from telegram service: " + response);
         }
+    }
+
+    @Override
+    public String generateLink(Long docId, LinkType linkType) {
+        var hash = cryptoTool.hashOf(docId);
+        return "http://" + linkAddress +"/" + linkType + "?id=" + hash;
     }
 
     private AppPhoto buildTransientAppPhoto(PhotoSize telegramPhoto, BinaryContent persistentBinaryContent) {

@@ -9,6 +9,7 @@ import com.argus.entity.RawData;
 import com.argus.service.FileService;
 import com.argus.service.MainService;
 import com.argus.service.ProducerService;
+import com.argus.service.enums.LinkType;
 import com.argus.service.enums.ServiceCommand;
 import com.argus.service.exceptions.UploadFileException;
 import lombok.extern.log4j.Log4j;
@@ -72,8 +73,8 @@ public class MainServiceImpl implements MainService {
         }
         try {
             AppDocument document = fileService.processDoc(update.getMessage());
-            //TODO implement link generation
-            var answer = "Document is successfully uploaded! Link to download: http://test.ru/get-doc/777";
+            String link = fileService.generateLink(document.getId(), LinkType.GET_DOC);
+            var answer = "Document is successfully uploaded! Link to download: " + link;
             sendAnswer(answer, chatId);
         } catch (UploadFileException e) {
             log.error(e);
@@ -105,8 +106,8 @@ public class MainServiceImpl implements MainService {
         }
         try {
             AppPhoto photo = fileService.processPhoto(update.getMessage());
-            //TODO implement save photo
-            var answer = "Photo is successfully uploaded! Link to download: http://test.ru/get-photo/777";
+            String link = fileService.generateLink(photo.getId(),LinkType.GET_PHOTO);
+            var answer = "Photo is successfully uploaded! Link to download: " + link;
             sendAnswer(answer, chatId);
         } catch (UploadFileException e) {
             log.error(e);

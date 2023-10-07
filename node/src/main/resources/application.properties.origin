@@ -17,3 +17,7 @@ spring.jpa.generate-ddl=
 token=
 service.file_info.uri=
 service.file_storage.uri=
+
+#rest_service properties
+link.adress=
+salt=
