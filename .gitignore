@@ -16,3 +16,5 @@
 /rest-service/target/classes/application.properties
 /rest-service/target/
 /common-utils/target/
+/mail-service/target/
+/mail-service/src/main/resources/application.properties
