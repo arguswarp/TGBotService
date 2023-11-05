@@ -6,6 +6,7 @@ import com.argus.entity.AppDocument;
 import com.argus.entity.AppPhoto;
 import com.argus.entity.AppUser;
 import com.argus.entity.RawData;
+import com.argus.service.AppUserService;
 import com.argus.service.FileService;
 import com.argus.service.MainService;
 import com.argus.service.ProducerService;
@@ -31,12 +32,14 @@ public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final AppUserDAO appUserDao;
     private final FileService fileService;
+    private final AppUserService appUserService;
 
-    public MainServiceImpl(RawDataDAO rawDataDAO, ProducerService producerService, AppUserDAO appUserDao, FileService fileService) {
+    public MainServiceImpl(RawDataDAO rawDataDAO, ProducerService producerService, AppUserDAO appUserDao, FileService fileService, AppUserService appUserService) {
         this.rawDataDAO = rawDataDAO;
         this.producerService = producerService;
         this.appUserDao = appUserDao;
         this.fileService = fileService;
+        this.appUserService = appUserService;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class MainServiceImpl implements MainService {
         } else if (BASIC_STATE.equals(userState)) {
             output = processServiceCommand(appUser, text);
         } else if (WAIT_FOR_EMAIL_STATE.equals(userState)) {
-            //TODO implement email handling
+            output = appUserService.setEmail(appUser, text);
         } else {
             log.error("Unknown user state " + userState);
             output = "Unknown error! Enter /cancel and try again!";
@@ -128,8 +131,7 @@ public class MainServiceImpl implements MainService {
         if (serviceCommand.isPresent()) {
             switch (serviceCommand.get()) {
                 case REGISTRATION -> {
-                    //TODO add registration (appUser here)
-                    return "Temporally unavailable";
+                    return appUserService.registerUser(appUser);
                 }
                 case HELP -> {
                     return help();
@@ -156,20 +158,19 @@ public class MainServiceImpl implements MainService {
 
     private AppUser findOrSaveAppUser(Update update) {
         User telegramUser = update.getMessage().getFrom();
-        AppUser persistentAppUser = appUserDao.findAppUserByTelegramUserId(telegramUser.getId());
-        if (persistentAppUser == null) {
+        var optional = appUserDao.findByTelegramUserId(telegramUser.getId());
+        if (optional.isEmpty()) {
             AppUser transientAppUser = AppUser.builder()
                     .telegramUserId(telegramUser.getId())
                     .userName(telegramUser.getUserName())
                     .firstname(telegramUser.getFirstName())
                     .lastName(telegramUser.getLastName())
-                    //TODO change default value after impl of registration
-                    .isActive(true)
+                    .isActive(false)
                     .userState(BASIC_STATE)
                     .build();
             return appUserDao.save(transientAppUser);
         }
-        return persistentAppUser;
+        return optional.get();
     }
 
     private void saveRawData(Update update) {
