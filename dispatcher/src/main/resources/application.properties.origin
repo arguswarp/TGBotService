@@ -4,6 +4,10 @@ server.port=
 #telegrambot properties
 telegrambot.token=
 telegrambot.name=
+telegrambot.uri=
+
+#for local use only
+server.ssl.enabled=
 
 #rabbitmq properties
 spring.rabbitmq.host=

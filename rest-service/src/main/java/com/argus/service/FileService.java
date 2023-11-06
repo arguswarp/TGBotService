@@ -10,5 +10,4 @@ public interface FileService {
 
     AppPhoto getPhoto(String id);
 
-    FileSystemResource getFileSystemResource(BinaryContent binaryContent);
 }
